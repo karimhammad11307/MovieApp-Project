@@ -2,9 +2,6 @@
 
 A modern, responsive, and feature-rich movie discovery application built with React, designed to help users find their next favorite film with ease.
 
-![App Screenshot](public/hero.png)  
-*(Note: Replace `public/hero.png` with an actual screenshot path if available.)*
-
 ## 🚀 Features
 
 ### 🔍 Smart Search & Discovery
