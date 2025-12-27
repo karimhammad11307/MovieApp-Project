@@ -1,0 +1,21 @@
+// Different approach without promise all;
+
+        // const response = await fetch(`${API_BASE_URL}/movie/${movieId}?language=en-US&api_key=${API_KEY}`);
+        // const recommendationsResponse = await fetch(`${API_BASE_URL}/movie/${movieId}/recommendations?language=en-US&api_key=${API_KEY}`)
+        // const movieProvidersResponse = await fetch(`${API_BASE_URL}/movie/${movieId}/watch/providers?api_key=${API_KEY}`);
+        // const castResponse = await fetch(`${API_BASE_URL}/movie/${movieId}/credits?language=en-US&api_key=${API_KEY}`);
+
+        // if(!response.ok || !recommendationsResponse.ok){
+        //     throw new Error('Failed to fetch movie details');
+        // }
+        // const data = await response.json();
+        // setMovie(data);
+
+        // const recommendationsData = await recommendationsResponse.json();
+        // setRecommendations(recommendationsData.results);
+
+        // const movieProvidersData = await movieProvidersResponse.json();
+        // setMovieProviders(movieProvidersData.results);
+
+        // const castData = await castResponse.json();
+        // setCast(castData.cast.slice(0,10));
