@@ -115,6 +115,10 @@ npm run dev
 
 Open http://localhost:5173 in your browser.
 
+📸 Screenshots
+
+
+(Note: You can replace these placeholder links with actual screenshots of your running app)
 
 🤝 Contributing
 
