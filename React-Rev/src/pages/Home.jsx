@@ -103,7 +103,7 @@ const Home = () => {
             alt="hero banner"
             className="w-full max-w-lg h-auto object-contain mx-auto drop-shadow-xl mb-6"
           />
-          <h1 className="text-5xl font-bold text-white mb-6 leading-tight max-w-3xl">
+          <h1 className="text-5xl font-bold text-white mb-6 leading-tight max-w-5xl">
             Find{" "}
             <span className="text-gradient bg-linear-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Movies

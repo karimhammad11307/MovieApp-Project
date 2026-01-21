@@ -5,7 +5,7 @@ import { getTrendMovies, updateSearchCount } from '../appwrite';
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-// REMOVED 'searchTerm' from arguments to avoid conflict with state
+// removed 'searchTerm' from arguments to avoid conflict with state
 export const useMovies = (selectedGenre) => { 
   const [searchTerm, setSearchTerm] = useState('');
   const [moviesList, setMoviesList] = useState([]);
