@@ -3,6 +3,7 @@ import Search from "../components/Search";
 import TrendingSection from "../components/TrendingSection";
 import AllMoviesSection from "../components/AllMoviesSection";
 import { useMovies } from "../hooks/useMovies";
+import { useTVSeries } from "../hooks/useTVSeries";
 import Navbar from "../components/Navbar";
 import { useLocation } from "react-router-dom";
 
@@ -32,22 +33,52 @@ const genres = [
 const Home = () => {
   // 2. Initialize State
   const [selectedGenre, setSelectedGenre] = useState(null);
-
-  const {
-    searchTerm,
-    setSearchTerm,
-    moviesList,
-    trendingMovies,
-    loading,
-    errorMessage,
-  } = useMovies(selectedGenre);
-
+  const [activeTab, setactiveTab] = useState("movie");
   const location = useLocation();
 
+  const {
+    searchTerm : movieSearchTerm,
+    setSearchTerm : setMovieSearchTerm,
+    moviesList: movieList,
+    trendingMovies,
+    loading: movieLoading,
+    errorMessage: movieError,
+  } = useMovies(selectedGenre);
+
+  const {
+    searchTerm: tvSearchTerm,
+    setSearchTerm: setTvSearchTerm,
+    tvList,
+    loading: tvLoading,
+    errorMessage: tvError,
+    
+  } = useTVSeries(selectedGenre)
+
+
+  const currentData = activeTab === "movie" 
+  ? {
+    searchTerm: movieSearchTerm,
+    setSearchTerm: setMovieSearchTerm,
+    dataList : movieList,
+    error: movieError,
+    loading: movieLoading,
+    sectionTitle: movieSearchTerm ? `Search result for "${movieSearchTerm}"` : (selectedGenre ? `${genres.find(g => g.id === selectedGenre)?.name || 'Genre'} Movies`: "All Movies")
+  }
+  :
+  {
+    searchTerm: tvSearchTerm,
+    setSearchTerm:setTvSearchTerm,
+    dataList: tvList,
+    loading: tvLoading,
+    error: tvError,
+    sectionTitle: tvSearchTerm ? `Search Results For "${tvSearchTerm}"` : (selectedGenre ? `${genres.find(g => g.id === selectedGenre)?.name || 'Genre'} TV Series`:"Popular TV Series")
+
+  }
+  
   // 3. Define the Handler BEFORE using it in useEffect
   const handleGenreSelect = (genreId) => {
     setSelectedGenre(genreId);
-    setSearchTerm("");
+    currentData.setSearchTerm("");
 
     setTimeout(() => {
       const element = document.getElementById("all-movies");
@@ -59,6 +90,12 @@ const Home = () => {
       }
     }, 50);
   };
+  const handleTabChange = (tab) => {
+    setactiveTab(tab);
+    setSelectedGenre(null)
+    setMovieSearchTerm("")
+    setTvSearchTerm("");
+  }
 
   // 4. Effect for Genre Selection (CRASH FIX HERE)
   useEffect(() => {
@@ -81,20 +118,22 @@ const Home = () => {
     }
   }, [location, trendingMovies]);
 
-  const getSectionTitle = () => {
-    if (searchTerm) return `Search Results for "${searchTerm}"`;
+  // const getSectionTitle = () => {
+  //   if (searchTerm) return `Search Results for "${searchTerm}"`;
 
-    if (selectedGenre) {
-      const genre = genres.find((g) => g.id === selectedGenre);
-      return genre ? `${genre.name} Movies` : "All Movies";
-    } else {
-      return "All Movies";
-    }
-  };
+  //   if (selectedGenre) {
+  //     const genre = genres.find((g) => g.id === selectedGenre);
+  //     return genre ? `${genre.name} Movies` : "All Movies";
+  //   } else {
+  //     return "All Movies";
+  //   }
+  // };
 
   return (
     <main className="min-h-screen bg-primary">
-      <Navbar onGenreSelect={handleGenreSelect} />
+      <Navbar onGenreSelect={handleGenreSelect} 
+      activeTab={activeTab}
+      onTabChange={handleTabChange} />
       <div className="pt-28 pb-10 relative overflow-hidden">
         <div className="pattern absolute inset-0 opacity-40 z-0" />
         <div className="wrapper relative z-10 flex flex-col items-center text-center">
@@ -106,15 +145,15 @@ const Home = () => {
           <h1 className="text-5xl font-bold text-white mb-6 leading-tight max-w-5xl">
             Find{" "}
             <span className="text-gradient bg-linear-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Movies
+              {activeTab === 'movie' ? "Movies" : "TV Series"}
             </span>{" "}
             you will enjoy without the hassle
           </h1>
           <div className="w-full max-w-3xl">
             <Search
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              loading={loading}
+              searchTerm={currentData.searchTerm}
+              setSearchTerm={currentData.setSearchTerm}
+              loading={currentData.loading}
             />
           </div>
         </div>
@@ -124,10 +163,10 @@ const Home = () => {
         <TrendingSection trendingMovies={trendingMovies} />
         <div id="all-movies" className="scroll-mt-24">
           <AllMoviesSection
-            title={getSectionTitle()}
-            loading={loading}
-            errorMessage={errorMessage}
-            moviesList={moviesList}
+            title={currentData.sectionTitle}
+            loading={currentData.loading}
+            errorMessage={currentData.error}
+            moviesList={currentData.dataList}
           />
         </div>
       </div>

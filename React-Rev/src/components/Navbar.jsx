@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-const Navbar = ({ onGenreSelect }) => {
+const Navbar = ({ onGenreSelect, activeTab, onTabChange }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -11,7 +11,6 @@ const Navbar = ({ onGenreSelect }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileGenresOpen, setIsMobileGenresOpen] = useState(false);
-
 
   const scrollToSection = (sectionId) => {
     // if we're already on the home page scroll immeditaly
@@ -54,6 +53,12 @@ const Navbar = ({ onGenreSelect }) => {
       onGenreSelect(genreId);
     }
   };
+  const handleTabClick = (tab) =>{
+    if(onTabChange) onTabChange(tab);
+    setIsMobileMenuOpen(false);
+    window.scrollTo({top:0, behavior:"smooth"});
+    
+  }
 
   const handleLogout = async () => {
     await logout();
@@ -71,10 +76,10 @@ const Navbar = ({ onGenreSelect }) => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse group">
               <div className="w-10 h-10 bg-linear-to-tr from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <span className="text-white font-bold text-xl">M</span>
+                <span className="text-white font-bold text-xl">CM</span>
               </div>
               <span className="self-center text-2xl font-bold whitespace-nowrap text-white group-hover:text-blue-400 transition-colors">
-                MovieApp
+                  CineMap
               </span>
             </Link>
 
@@ -96,6 +101,20 @@ const Navbar = ({ onGenreSelect }) => {
           {/* 2. DESKTOP NAVIGATION (Hidden on Mobile) */}
           <div className="hidden md:block">
             <ul className="flex flex-row space-x-8 rtl:space-x-reverse font-medium text-sm items-center">
+              <li>
+                <button onClick={() => handleTabClick('movie')} 
+                className={`${activeTab === 'movie' ? 'text-blue-400 font-bold ' : 'text-white'} 
+                hover:text-blue-400 transition-colors`}> Movies
+                </button>
+              </li>
+
+                <li>
+                  <button onClick={() => handleTabClick('tv')}
+                    className={`${activeTab === 'tv' ? 'text-blue-400 font-bold' : 'text-white'} 
+                    hover:text-blue-400 transition-colors`}> TV Series
+                  </button>
+                </li>
+
               <li>
                 <Link to="/" className="text-white hover:text-blue-400 transition-colors">Home</Link>
               </li>
@@ -158,6 +177,21 @@ const Navbar = ({ onGenreSelect }) => {
           <div className="md:hidden mt-4 pb-4 border-t border-gray-700 animate-in slide-in-from-top-5 fade-in duration-200">
             <ul className="flex flex-col space-y-4 pt-4 font-medium text-base">
               <li>
+                <button 
+                onClick={() => handleTabClick('movie')} 
+                  className={`block px-2 ${activeTab === 'movie' ? 'text-blue-400' : 'text-white'}`}
+                >
+                  Movies
+                </button>
+                </li>
+                <li>
+                <button 
+                onClick={() => handleTabClick('tv')} 
+                  className={`block px-2 ${activeTab === 'tv' ? 'text-blue-400' : 'text-white'}`}
+                >
+                  Tv Series
+                </button>
+              </li>
                 <Link 
                   to="/" 
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -165,7 +199,8 @@ const Navbar = ({ onGenreSelect }) => {
                 >
                   Home
                 </Link>
-              </li>
+              
+              
               <li>
                 <button 
                   onClick={() => scrollToSection("trending")} 

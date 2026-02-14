@@ -4,7 +4,7 @@ import { useDebounce } from 'use-debounce';
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-export const useSearchSuggestion = (searchTerm) => {
+export const useSearchSuggestion = (searchTerm, searchType = 'movie') => {
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
@@ -17,7 +17,7 @@ export const useSearchSuggestion = (searchTerm) => {
         const  fetchSuggestions = async () => {
             setLoading(true);
             try{
-                const endpoint = `${API_BASE_URL}/search/movie?query=${encodeURIComponent(debouncedSearchTerm)}&api_key=${API_KEY}`;
+                const endpoint = `${API_BASE_URL}/search/${searchType}?query=${encodeURIComponent(debouncedSearchTerm)}&api_key=${API_KEY}`;
                 const response = await fetch(endpoint);
                 if(!response.ok){
                     throw new Error('Failed to fetch suggestions');
@@ -35,7 +35,7 @@ export const useSearchSuggestion = (searchTerm) => {
         };
         fetchSuggestions();
     
-    }, [debouncedSearchTerm])
+    }, [debouncedSearchTerm, searchType])
     return {suggestions, loading}
 
 }
